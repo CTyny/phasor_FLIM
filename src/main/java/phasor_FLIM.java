@@ -55,11 +55,7 @@ public class phasor_FLIM implements PlugIn{
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(title);
         fileChooser.setFileFilter(fileTypeFilter);
-        if (multiFile == true) {
-            fileChooser.setMultiSelectionEnabled(true);//can select multiple files to batch analyse
-        }   else {
-            fileChooser.setMultiSelectionEnabled(false);
-        }
+        fileChooser.setMultiSelectionEnabled(multiFile);//select multiple files to batch analyse if true
         fileChooser.setCurrentDirectory(new File("c://"));
 	int fileChooserResult = fileChooser.showOpenDialog(null);
 	if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
