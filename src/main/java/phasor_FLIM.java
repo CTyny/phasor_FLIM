@@ -30,21 +30,12 @@ public class phasor_FLIM implements PlugIn{
         if (segProb > 0) {
             segment = true;
         }
-        //TODO: make file choosing a seperate class to avoid repeated code
-        //select multiple files for batch analysis
-        File[] selectedFiles = null;
-        FileFilter tcspcFiles  = new FileNameExtensionFilter("TCSPC data files", "sdt"); //don't let muppets chose the wrong file type!
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select TCSPC Image files");
-        fileChooser.setFileFilter(tcspcFiles);
-	fileChooser.setMultiSelectionEnabled(true);//can select multiple files to batch analyse
-	fileChooser.setCurrentDirectory(new File("c://"));
-	int fileChooserResult = fileChooser.showOpenDialog(null);
-	if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
-            selectedFiles = fileChooser.getSelectedFiles();
-	}
         
-        File classifierFile = null;
+        //select multiple files for batch analysis
+        FileFilter tcspcFiles  = new FileNameExtensionFilter("TCSPC data files", "sdt"); //don't let muppets chose the wrong file type!
+        File[] dataFiles = fileSelector(tcspcFiles, true, "Select TCSPC Image files");
+        
+        File[] classifierFile = null;
         if (segment==true) {
 	    FileFilter wekaClassifier = new FileNameExtensionFilter("WEKA Trainable Segmentation classifier", "model");
             JFileChooser classifierChooser = new JFileChooser();
@@ -54,9 +45,27 @@ public class phasor_FLIM implements PlugIn{
             classifierChooser.setCurrentDirectory(new File("c://"));
             int classifierChooserResult = classifierChooser.showOpenDialog(null);
             if (classifierChooserResult == JFileChooser.APPROVE_OPTION) {
-                selectedFiles = classifierChooser.getSelectedFiles();
+                classifierFile = classifierChooser.getSelectedFiles();
             }
 	}
+    }
+    
+    public File [] fileSelector(FileFilter fileTypeFilter, Boolean multiFile, String title) {
+        File[] selectedFiles = null;
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle(title);
+        fileChooser.setFileFilter(fileTypeFilter);
+        if (multiFile == true) {
+            fileChooser.setMultiSelectionEnabled(true);//can select multiple files to batch analyse
+        }   else {
+            fileChooser.setMultiSelectionEnabled(false);
+        }
+        fileChooser.setCurrentDirectory(new File("c://"));
+	int fileChooserResult = fileChooser.showOpenDialog(null);
+	if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
+            selectedFiles = fileChooser.getSelectedFiles();
+	}
+        return selectedFiles;
     }
         
     public static void main (final String... args){
