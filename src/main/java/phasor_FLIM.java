@@ -1,9 +1,14 @@
 
 import ij.IJ;
+import ij.ImagePlus;
 import ij.gui.GenericDialog;
-import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
+import ij.process.ImageProcessor;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -63,7 +68,19 @@ public class phasor_FLIM implements PlugIn{
 	}
         return selectedFiles;
     }
+    
+    public ImagePlus hyperStackAssembler (File [] fileLocations) {
+        int x = 256;//hardwire these numbers until sensible way to check file headers and handle mismatches can be implemented
+        int y = 256;
+        int t = 64;
+        int bitDepth = 32;
+        int c = 0;//channels TBC
+        ImagePlus hyperStack = IJ.createHyperStack("", x, y, c, fileLocations.length, t, bitDepth); // use z for stacking files
         
+        //do something useful here
+        return hyperStack;
+    }
+    
     public static void main (final String... args){
             new phasor_FLIM().run("");
         }
