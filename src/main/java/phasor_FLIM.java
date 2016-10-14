@@ -3,15 +3,13 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
-import ij.process.ImageProcessor;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import loci.formats.FormatException;
+import loci.plugins.BF;
 
 
 public class phasor_FLIM implements PlugIn{
@@ -68,6 +66,20 @@ public class phasor_FLIM implements PlugIn{
 	}
         return selectedFiles;
     }
+    
+    public ImagePlus bioformatsFileOpener (String filePath){
+        
+        ImagePlus[] imp = new ImagePlus[1];
+        try {
+            imp = BF.openImagePlus(filePath);
+        } catch (IOException e) {
+            IJ.error("Cannot read file:" + filePath, e.getMessage());
+        } catch (FormatException e) {
+            IJ.error("Cannot read file:" + filePath, e.getMessage());
+        }
+        return imp[0];
+    }
+    
     
     public ImagePlus hyperStackAssembler (File [] fileLocations) {
         int x = 256;//hardwire these numbers until sensible way to check file headers and handle mismatches can be implemented
