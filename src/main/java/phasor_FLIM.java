@@ -41,15 +41,7 @@ public class phasor_FLIM implements PlugIn{
         File[] classifierFile = null;
         if (segment==true) {
 	    FileFilter wekaClassifier = new FileNameExtensionFilter("WEKA Trainable Segmentation classifier", "model");
-            JFileChooser classifierChooser = new JFileChooser();
-            classifierChooser.setDialogTitle("Select classifier to use");
-            classifierChooser.setFileFilter(wekaClassifier);
-            classifierChooser.setMultiSelectionEnabled(false);//can only select a single classifier!
-            classifierChooser.setCurrentDirectory(new File("c://"));
-            int classifierChooserResult = classifierChooser.showOpenDialog(null);
-            if (classifierChooserResult == JFileChooser.APPROVE_OPTION) {
-                classifierFile = classifierChooser.getSelectedFiles();
-            }
+            classifierFile = fileSelector(wekaClassifier, false, "Select classifier to use");
 	}
     }
     
