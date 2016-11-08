@@ -48,6 +48,7 @@ public class phasor_FLIM implements PlugIn{
             IJ.log("File " + (i+1) + " processed...");
         }
         phasor2DHistogram(results);
+        phasorImage(results);
     }
     
     public File [] fileSelector(FileFilter fileTypeFilter, Boolean multiFile, String title) {
@@ -205,6 +206,23 @@ public class phasor_FLIM implements PlugIn{
         LUT output = new LUT(reds, greens, blues);
         
         return output;
+    }
+    
+    public void phasorImage (double[][][][] input){
+        ImagePlus rgbStack = NewImage.createRGBImage("phasorImages", input[0][0].length, input[0][0][0].length, input.length, NewImage.FILL_BLACK);
+        for (int i=0; i<input.length; i++){
+            rgbStack.setSlice(i+1);
+            ImageProcessor ip = rgbStack.getProcessor();
+            for (int j=0; j<ip.getHeight(); j++){
+                for (int k=0; k<ip.getWidth(); k++){
+                    if (input[i][0][k][j]>50){
+                        int[] rgb = {(int)(input[i][1][k][j]*255), 0,(int)(input[i][2][k][j]*1.4*255) };//rgb colour model logic here
+                        ip.putPixel(k, j, rgb);
+                    }
+                }
+            }
+        }
+        rgbStack.show();
     }
     
     public ImagePlus hyperstackAssembler (double[][][] input){
